@@ -1,0 +1,4 @@
+encryptionsalt: v1:gcyoAQ6iCuw=:v1:kNRhdtNMaGdItdIU:AkSKV3B6JYt4U2kwL6rj7+MAu9ICQA==
+config:
+  azure-native:location: westeurope
+  src-jjaks:aksName: jjaks2

@@ -4,8 +4,9 @@ Pulumi intro
 - Pulumi CLI https://github.com/pulumi/pulumi
 - Project and Stack https://www.pulumi.com/docs/intro/concepts/#overview
 - Azure Native Provider (it’s built and automatically from the Azure Resource Manager API) https://github.com/pulumi/pulumi-azure-native
-- State https://www.pulumi.com/docs/intro/concepts/state/
+- State https://www.pulumi.com/docs/intro/concepts/state/ and sensitive values are encrypted
 - Language - I will use C# - create project https://www.pulumi.com/docs/get-started/azure/create-project/
+- Resource autonaming https://www.pulumi.com/docs/intro/concepts/resources/#autonaming
 - Convert Terraform https://www.pulumi.com/tf2pulumi/
 
 ## Prepare Pulumi

@@ -71,7 +71,7 @@ class JJAksStack : Stack
                     VmSize = "Standard_B2s",
                     AvailabilityZones = new[] { "1", "2", "3" },
                     EnableAutoScaling = true,
-                    VnetSubnetID = aksSubnet.Apply(s => s!.Id), 
+                    VnetSubnetID = aksSubnet.Apply(s => s!.Id!), 
                 }
             },
             WindowsProfile = new ManagedClusterWindowsProfileArgs

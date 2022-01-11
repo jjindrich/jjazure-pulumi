@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 using Pulumi;
-using Pulumi.AzureNative.Resources;
-using Pulumi.AzureNative.Storage;
-using Pulumi.AzureNative.Storage.Inputs;
 
+using AzureNative = Pulumi.AzureNative;
+using Pulumi.AzureNative.Resources;
 using Pulumi.AzureNative.ContainerService;
 using Pulumi.AzureNative.ContainerService.Inputs;
 
@@ -11,6 +10,7 @@ using Random = Pulumi.Random;
 
 class JJAksStack : Stack
 {
+    // example https://github.com/pulumi/examples/tree/master/azure-cs-aks-helm
     public JJAksStack()
     {
         // access stack configuration
@@ -27,7 +27,7 @@ class JJAksStack : Stack
         // Use existing keyvault
         // ISSUE: cannot get secret value - GitHub Issue https://github.com/pulumi/pulumi-azure-native/issues/1422
         /*
-        var nodeWindowsPassword = Output.Create(Pulumi.AzureNative.KeyVault.GetSecret.InvokeAsync(new Pulumi.AzureNative.KeyVault.GetSecretArgs
+        var nodeWindowsPassword = Output.Create(AzureNative.KeyVault.GetSecret.InvokeAsync(new AzureNative.KeyVault.GetSecretArgs
         {
             SecretName = "akswinpassword",            
             ResourceGroupName = config.Require("keyvault-group"),
@@ -41,6 +41,14 @@ class JJAksStack : Stack
             OverrideSpecial = "_%@",
         });
         Pulumi.Log.Info($"nodeWindowsPassword generated: {nodeWindowsPassword.Result}");
+
+        // Use existing Virtual Network
+        var aksSubnet = Output.Create(AzureNative.Network.GetSubnet.InvokeAsync(new AzureNative.Network.GetSubnetArgs
+        {
+            SubnetName = config.Require("NetworkSubnetName"),
+            VirtualNetworkName = config.Require("NetworkName"),
+            ResourceGroupName = config.Require("NetworkRgName"),
+        }));
 
         // Create an AKS (https://www.pulumi.com/registry/packages/azure-native/api-docs/containerservice/managedcluster/)
         string aksName = config.Require("aksName");        
@@ -62,7 +70,8 @@ class JJAksStack : Stack
                     Count = 1,
                     VmSize = "Standard_B2s",
                     AvailabilityZones = new[] { "1", "2", "3" },
-                    EnableAutoScaling = true
+                    EnableAutoScaling = true,
+                    VnetSubnetID = aksSubnet.Apply(s => s!.Id), 
                 }
             },
             WindowsProfile = new ManagedClusterWindowsProfileArgs
@@ -74,20 +83,20 @@ class JJAksStack : Stack
             //TODO: add AAD admin group
             Identity = new ManagedClusterIdentityArgs
             {
-                Type = Pulumi.AzureNative.ContainerService.ResourceIdentityType.SystemAssigned
+                Type = AzureNative.ContainerService.ResourceIdentityType.SystemAssigned
             },
             AddonProfiles =
             {
-                { "kubeDashboard", new Pulumi.AzureNative.ContainerService.Inputs.ManagedClusterAddonProfileArgs
+                { "kubeDashboard", new AzureNative.ContainerService.Inputs.ManagedClusterAddonProfileArgs
                 {
                     Enabled = false,
                 } },
-                { "azurepolicy", new Pulumi.AzureNative.ContainerService.Inputs.ManagedClusterAddonProfileArgs
+                { "azurepolicy", new AzureNative.ContainerService.Inputs.ManagedClusterAddonProfileArgs
                 {
                     Enabled = true,
                 } }
                 //TODO: log analytics addon
-                // { "omsagent", new Pulumi.AzureNative.ContainerService.Inputs.ManagedClusterAddonProfileArgs
+                // { "omsagent", new AzureNative.ContainerService.Inputs.ManagedClusterAddonProfileArgs
                 // {
                 //     Config = 
                 //     {
@@ -95,9 +104,13 @@ class JJAksStack : Stack
                 //     },
                 //     Enabled = true,
                 // } }
-            }
-            //TODO: network profile
-
+            },
+            NetworkProfile = new AzureNative.ContainerService.Inputs.ContainerServiceNetworkProfileArgs
+            {
+                NetworkPlugin = "azure",
+                LoadBalancerSku = "standard",
+                OutboundType = "loadBalancer",
+            },
         });
     }
 

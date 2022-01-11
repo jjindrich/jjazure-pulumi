@@ -4,5 +4,8 @@ config:
   src-jjaks:aksRgName: jjmicroservices2-rg
   src-jjaks:aksRgNodesName: jjmicroservices2-aks-rg
   src-jjaks:aksName: jjaks2
-  src-jjaks:keyvault-group: jjmicroservices-rg
-  src-jjaks:keyvault: jjakskv
+  # src-jjaks:keyvault-group: jjmicroservices-rg
+  # src-jjaks:keyvault: jjakskv
+  src-jjaks:NetworkName: JJDevV2NetworkApp
+  src-jjaks:NetworkSubnetName: DmzAks
+  src-jjaks:NetworkRgName: JJDevV2-Infra

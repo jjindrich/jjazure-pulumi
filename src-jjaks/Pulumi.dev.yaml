@@ -4,3 +4,5 @@ config:
   src-jjaks:aksRgName: jjmicroservices2-rg
   src-jjaks:aksRgNodesName: jjmicroservices2-aks-rg
   src-jjaks:aksName: jjaks2
+  src-jjaks:keyvault-group: jjmicroservices-rg
+  src-jjaks:keyvault: jjakskv
